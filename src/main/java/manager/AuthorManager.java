@@ -77,6 +77,7 @@ public class AuthorManager {
 
 
     public void update(Author author) {
+
         String sql = "UPDATE author SET name = '%s', surname = '%s',email = '%s',age = %d WHERE id = %d";
         try(Statement statement = connection.createStatement()){
             statement.executeUpdate(String.format(sql, author.getName(), author.getSurname(), author.getEmail(),author.getAge(),author.getId()));

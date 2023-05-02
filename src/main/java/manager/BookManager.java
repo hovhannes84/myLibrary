@@ -3,10 +3,7 @@ package manager;
 import com.example.mylibrary.db.DBConectionProvider;
 import model.Book;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,14 +13,17 @@ public class BookManager {
     private AuthorManager authorManager = new AuthorManager();
 
     public void save(Book book) {
-        System.out.println(book);
-        try (Statement statement = connection.createStatement()) {
-            String sql = "INSERT INTO book(title, description, price,author_id,user_id,pic_name) VALUES('%s','%s',%d,%d,%d,'%s')";
-            String sqlFormatted = String.format(sql, book.getTitle(), book.getDescription(),book.getPrice(),
-                    book.getAuthor().getId(),book.getUser_id(),book.getPicName()) ;
-            statement.executeUpdate(sqlFormatted, Statement.RETURN_GENERATED_KEYS);
-            ResultSet generatedKeys = statement.getGeneratedKeys();
-            if (generatedKeys.next()) {
+        String sql = "INSERT INTO book(title, description, price,author_id,user_id,pic_name) VALUES(?,?,?,?,?,?)";
+        try (PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            ps.setString(1, book.getTitle());
+            ps.setString(2, book.getDescription());
+            ps.setString(3, String.valueOf(book.getPrice()));
+            ps.setString(4, String.valueOf(book.getAuthor().getId()));
+            ps.setString(5, String.valueOf(book.getUser_id()));
+            ps.setString(6, book.getPicName());
+            ps.executeUpdate();
+            ResultSet generatedKeys = ps.getGeneratedKeys();
+            if(generatedKeys.next()) {
                 book.setId(generatedKeys.getInt(1));
             }
             System.out.println("book inserted into DB");
