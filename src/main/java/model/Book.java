@@ -16,8 +16,7 @@ public class Book {
     private String picName;
     private int price;
     private Author author;
-    private int user_id;
-
+    private User user;
 
 
 }

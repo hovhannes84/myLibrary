@@ -2,6 +2,7 @@ package servlet;
 
 import manager.AuthorManager;
 import manager.BookManager;
+import manager.UserManager;
 import model.Author;
 import model.Book;
 
@@ -23,6 +24,7 @@ public class CreateBookServlet extends HttpServlet {
 
     private AuthorManager authorManager = new AuthorManager();
     private BookManager bookManager = new BookManager();
+    private UserManager userManager = new UserManager();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -49,7 +51,7 @@ public class CreateBookServlet extends HttpServlet {
                 .description(description)
                 .price(price)
                 .author(authorManager.getById(author_id))
-                .user_id(user_id)
+                .user(userManager.getByUserId(user_id))
                 .picName(picName)
                 .build();
         bookManager.save(book);

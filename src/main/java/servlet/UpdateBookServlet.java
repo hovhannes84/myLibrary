@@ -2,6 +2,7 @@ package servlet;
 
 import manager.AuthorManager;
 import manager.BookManager;
+import manager.UserManager;
 import model.Author;
 import model.Book;
 
@@ -18,6 +19,7 @@ public class UpdateBookServlet extends HttpServlet {
 
     AuthorManager authorManager = new AuthorManager();
     BookManager bookManager = new BookManager();
+    UserManager userManager = new UserManager();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -43,7 +45,7 @@ public class UpdateBookServlet extends HttpServlet {
         book.setDescription(description);
         book.setPrice(price);
         book.setAuthor(authorManager.getById(author_id));
-        book.setUser_id(user_id);
+        book.setUser(userManager.getByUserId(user_id));
         bookManager.update(book);
         resp.sendRedirect("/books");
     }

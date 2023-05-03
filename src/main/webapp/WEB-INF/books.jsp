@@ -33,7 +33,7 @@
 
     <% if (books != null && !books.isEmpty()) {%>
     <% for (Book book : books) { %>
-    <% if (book.getUser_id() == user.getId()) {%>
+    <% if (book.getUser().getId() == user.getId()) {%>
     <tr>
         <td>
             <%if (book.getPicName() == null || book.getPicName().equals("nuul")) {%>
@@ -52,7 +52,7 @@
         </td>
         <td><%=book.getAuthor().getName()%>
         </td>
-        <td><%=book.getUser_id()%>
+        <td><%=book.getUser().getId()%>
         </td>
 
         <td><a href="/removeBook?id=<%=book.getId()%>">Delete</a>

@@ -2,6 +2,7 @@ package manager;
 
 import com.example.mylibrary.db.DBConectionProvider;
 import model.User;
+import model.UserType;
 
 import java.sql.*;
 
@@ -65,6 +66,19 @@ public class UserManager {
                 .surname(resultSet.getString("surname"))
                 .email(resultSet.getString("email"))
                 .password(resultSet.getString("password"))
+                .userType(UserType.valueOf(resultSet.getString("user_type")))
                 .build();
+    }
+
+    public User getByUserId(int user_id) {
+        try (Statement statement = connection.createStatement()) {
+            ResultSet resultSet = statement.executeQuery("Select * from user where id = " + user_id);
+            if (resultSet.next()) {
+                return getUserFromResultSet(resultSet);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

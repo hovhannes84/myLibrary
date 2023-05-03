@@ -11,6 +11,7 @@ public class BookManager {
     private DBConectionProvider DBConnectionProvider;
     private Connection connection = DBConnectionProvider.getInstance().getConnection();
     private AuthorManager authorManager = new AuthorManager();
+    private UserManager userManager = new UserManager();
 
     public void save(Book book) {
         String sql = "INSERT INTO book(title, description, price,author_id,user_id,pic_name) VALUES(?,?,?,?,?,?)";
@@ -19,7 +20,7 @@ public class BookManager {
             ps.setString(2, book.getDescription());
             ps.setString(3, String.valueOf(book.getPrice()));
             ps.setString(4, String.valueOf(book.getAuthor().getId()));
-            ps.setString(5, String.valueOf(book.getUser_id()));
+            ps.setString(5, String.valueOf(book.getUser().getId()));
             ps.setString(6, book.getPicName());
             ps.executeUpdate();
             ResultSet generatedKeys = ps.getGeneratedKeys();
@@ -67,10 +68,15 @@ public class BookManager {
         book.setDescription(resultSet.getString("description"));
         book.setPrice(resultSet.getInt("price"));
         book.setAuthor(authorManager.getById(resultSet.getInt("author_id")));
-        book.setUser_id(resultSet.getInt("user_id"));
+        int user_id = resultSet.getInt("user_id");
+        book.setUser(userManager.getByUserId(user_id));
         book.setPicName(resultSet.getString("pic_name"));
         return book;
     }
+
+
+
+
 
 
     public void removeById(int bookId) {
@@ -82,9 +88,9 @@ public class BookManager {
         }
     }
     public void update(Book book) {
-        String sql = "UPDATE book SET title = '%s', description = '%s',price =%d,author_id = %d WHERE id = %d";
+        String sql = "UPDATE book SET title = '%s', description = '%s',price =%d,author_id = %d,user_id = %d,pic_name='%s' WHERE id = %d";
         try(Statement statement = connection.createStatement()){
-            statement.executeUpdate(String.format(sql, book.getTitle(), book.getDescription(), book.getPrice(),book.getAuthor().getId(),book.getId()));
+            statement.executeUpdate(String.format(sql, book.getTitle(), book.getDescription(), book.getPrice(),book.getAuthor().getId(),book.getUser().getId(),book.getPicName(),book.getId()));
         } catch (SQLException e) {
             e.printStackTrace();
 
